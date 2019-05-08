@@ -15,7 +15,7 @@ public class ConnexionJ {
 	    try{
 	        Class.forName("com.mysql.cj.jdbc.Driver");
 	        
-	        url="jdbc:mysql://localhost/test?serverTimezone="+Calendar.getInstance().getTimeZone().getID();
+	        url="jdbc:mysql://localhost/test2?serverTimezone="+Calendar.getInstance().getTimeZone().getID();
 	        user="root";
 	        password="";
 	        

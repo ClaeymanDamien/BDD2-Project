@@ -7,10 +7,6 @@ SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
---/!\
--- Mettre default value NULL a idClass etudiant
---/!\
-
 #------------------------------------------------------------
 # Table: Coordonnees
 #------------------------------------------------------------
@@ -50,14 +46,12 @@ CREATE TABLE Cours(
         Nom               Varchar (20) NOT NULL ,
         Description       Varchar (255) NOT NULL ,
         Annee             Varchar (13) NOT NULL ,
-        Coefficient       Float NOT NULL ,
-        PourcentageDE     Float NOT NULL ,
-        PourcentageTP     Float NOT NULL ,
-        PourcentageProjet Float NOT NULL ,
-        idProfesseur      Int NOT NULL
+        Coefficient       Double NOT NULL ,
+        PourcentageDE     Double NOT NULL ,
+        PourcentageTP     Double NOT NULL ,
+        PourcentageProjet Double NOT NULL 
 	,CONSTRAINT Cours_PK PRIMARY KEY (idCours)
 
-	,CONSTRAINT Cours_Professeur_FK FOREIGN KEY (idProfesseur) REFERENCES Professeur(idProfesseur)
 )ENGINE=InnoDB;
 
 
@@ -101,7 +95,6 @@ CREATE TABLE Epreuve(
 
 CREATE TABLE Tuteur(
         IdTuteur   Int  Auto_increment  NOT NULL ,
-        Numero     Varchar (20) NOT NULL ,
         idCoordonnees Int NOT NULL
 
 	,CONSTRAINT Tuteur_PK PRIMARY KEY (IdTuteur)
@@ -115,7 +108,7 @@ CREATE TABLE Tuteur(
 
 CREATE TABLE Etudiant(
         idEleve    Int  Auto_increment  NOT NULL ,
-        idClasse   Int NOT NULL ,
+        idClasse   Int ,
         idCoordonnees   Int NOT NULL ,
         IdTuteur   Int NOT NULL
 	,CONSTRAINT Etudiant_PK PRIMARY KEY (idEleve)
@@ -132,11 +125,13 @@ CREATE TABLE Etudiant(
 
 CREATE TABLE estDispense(
         idClasse Int NOT NULL ,
-        idCours  Int NOT NULL
+        idCours  Int NOT NULL,
+        idProfesseur Int NOT NULL 
 	,CONSTRAINT estDispense_PK PRIMARY KEY (idClasse,idCours)
 
 	,CONSTRAINT estDispense_Classe_FK FOREIGN KEY (idClasse) REFERENCES Classe(idClasse)
 	,CONSTRAINT estDispense_Cours0_FK FOREIGN KEY (idCours) REFERENCES Cours(idCours)
+        ,CONSTRAINT Cours_Professeur1_FK FOREIGN KEY (idProfesseur) REFERENCES Professeur(idProfesseur)
 )ENGINE=InnoDB;
 
 

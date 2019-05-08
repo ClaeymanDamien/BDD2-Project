@@ -70,6 +70,7 @@ public class Student {
 		
 		System.out.println("Dans quelle classe voulez vous le mettre: ");
 		idClasse = sc.nextInt();
+		sc.nextLine();
 		
 	}
 	/*

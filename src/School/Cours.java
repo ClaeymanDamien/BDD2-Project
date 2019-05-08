@@ -1,23 +1,24 @@
 package School;
 
+import java.util.Scanner;
+
 public class Cours {
 	private int id;
-	private int idProfesseur;
 	private String nom;
 	private String description;
 	private String annee;
-	private float coefficient;
-	private float pourcentageDE;
-	private float pourcentageTP;
-	private float pourcentageProjet;
+	private double coefficient;
+	private double pourcentageDE;
+	private double pourcentageTP;
+	private double pourcentageProjet;
+	private Scanner sc;
 	
 	
 	
 	
-	public Cours(int id, int idProfesseur, String nom, String description, String annee, float coefficient,
-			float pourcentageDE, float pourcentageTP, float pourcentageProjet) {
+	public Cours(int id, String nom, String description, String annee, double coefficient,
+			double pourcentageDE, double pourcentageTP, double pourcentageProjet) {
 		this.id = id;
-		this.idProfesseur = idProfesseur;
 		this.nom = nom;
 		this.description = description;
 		this.annee = annee;
@@ -29,9 +30,8 @@ public class Cours {
 	
 	
 	
-	public Cours(int idProfesseur, String nom, String description, String annee, float coefficient, float pourcentageDE,
-			float pourcentageTP, float pourcentageProjet) {
-		this.idProfesseur = idProfesseur;
+	public Cours(String nom, String description, String annee, double coefficient, double pourcentageDE,
+			double pourcentageTP, double pourcentageProjet) {
 		this.nom = nom;
 		this.description = description;
 		this.annee = annee;
@@ -40,20 +40,45 @@ public class Cours {
 		this.pourcentageTP = pourcentageTP;
 		this.pourcentageProjet = pourcentageProjet;
 	}
+	
+	public Cours(Scanner sc) {
+		this.sc = sc;
+	}
 
 
+	public void fillCours() {
+		System.out.println("Formulaire cours: ");
+		System.out.println();
+
+		System.out.println("Nom du cours: ");
+		nom = sc.nextLine();
+		System.out.println("Description ");
+		description = sc.nextLine();
+		System.out.println("Annee: ");
+		annee = sc.nextLine();
+		System.out.println("Coefficient: ");
+		coefficient = sc.nextDouble();
+		System.out.println("Pourcentage du DE: ");
+		pourcentageDE = sc.nextDouble();
+		System.out.println("Pourcentage du TP: ");
+		pourcentageTP = sc.nextDouble();
+		System.out.println("Pourcentage du Projet: ");
+		pourcentageProjet = sc.nextDouble();
+	}
+	
+	/*
+	 * Setter / Getter
+	 */
+	
+	public void setSc(Scanner sc) {
+		this.sc = sc;
+	}
 
 	public int getId() {
 		return id;
 	}
 	public void setId(int id) {
 		this.id = id;
-	}
-	public int getIdProfesseur() {
-		return idProfesseur;
-	}
-	public void setIdProfesseur(int idProfesseur) {
-		this.idProfesseur = idProfesseur;
 	}
 	public String getNom() {
 		return nom;
@@ -73,28 +98,28 @@ public class Cours {
 	public void setAnnee(String annee) {
 		this.annee = annee;
 	}
-	public float getCoefficient() {
+	public double getCoefficient() {
 		return coefficient;
 	}
-	public void setCoefficient(float coefficient) {
+	public void setCoefficient(double coefficient) {
 		this.coefficient = coefficient;
 	}
-	public float getPourcentageDE() {
+	public double getPourcentageDE() {
 		return pourcentageDE;
 	}
-	public void setPourcentageDE(float pourcentageDE) {
+	public void setPourcentageDE(double pourcentageDE) {
 		this.pourcentageDE = pourcentageDE;
 	}
-	public float getPourcentageTP() {
+	public double getPourcentageTP() {
 		return pourcentageTP;
 	}
-	public void setPourcentageTP(float pourcentageTP) {
+	public void setPourcentageTP(double pourcentageTP) {
 		this.pourcentageTP = pourcentageTP;
 	}
-	public float getPourcentageProjet() {
+	public double getPourcentageProjet() {
 		return pourcentageProjet;
 	}
-	public void setPourcentageProjet(float pourcentageProjet) {
+	public void setPourcentageProjet(double pourcentageProjet) {
 		this.pourcentageProjet = pourcentageProjet;
 	}
 }

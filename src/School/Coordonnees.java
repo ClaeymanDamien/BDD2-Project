@@ -51,6 +51,7 @@ public class Coordonnees {
 	}
 
 	public void createCoordonnees() {
+		
 		System.out.println("Nom: ");
 		nom = sc.nextLine();
 		System.out.println("Prenom: ");

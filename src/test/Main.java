@@ -11,6 +11,11 @@ import School.Promotion;
 import School.Student;
 import School.Tuteur;
 
+/*
+ * TODO
+ * 
+ * Faire création Professeur
+ */
 public class Main {
 	public static void main(String[] args) {
 		
@@ -20,22 +25,28 @@ public class Main {
 		/*Coordonnees coordonnees = new Coordonnees("Damien", "Claeyman", "14B Berthelot", "94800", "Villejuif", "0667876545", "dclmn@hotmail.fr");
 		managerDB.insertCoordonnees(coordonnees);*/
 		
-		/*Student student = new Student(34,1,"Damien", "Claeyman", "14B Berthelot", "94800", "Villejuif", "0667876545", "dclmn@hotmail.fr");
-		managerDB.insertStudent(student);*/
 		
 		/*Tuteur tuteur = new Tuteur("Damien", "Claeyman", "14B Berthelot", "94800", "Villejuif", "0667876545", "dclmn@hotmail.fr");
 		managerDB.insertTuteur(tuteur);
-		System.out.println("Fait");*/
+		*/
 		
 		/*Promotion promotion = new Promotion("TropBien");
 		managerDB.insertPromotion(promotion);*/
 			
+		/*Coordonnees coordonnees = new Coordonnees(sc);
+	
+		coordonnees.createCoordonnees();*/
+		Admin admin = new Admin(sc);
+		//admin.createNewPromotion();
 		
-		/*Admin admin = new Admin(sc);
-		admin.createStudent();*/
+		//admin.addStudentToClasse();
+		admin.createNewClasse();
+		//admin.createNewStudent();
+		//admin.addCoursToClasse();
 		
-		/*Cours cours = new Cours(1, "Physique", "On valide", "2019", 2.0f, 0.5f, 0.2f, 0.3f);
+		/*Cours cours = new Cours("Physique", "On valide", "2019", 2.0, 0.5, 0.2, 0.3);
 		managerDB.insertCours(cours);*/
+		
 		
 		
 		

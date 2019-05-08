@@ -11,6 +11,8 @@ public class Admin {
 	ManagerDB managerDB;
 	Scanner sc;
 	
+	private static final String ERROR_EXIST = "Une des information n'existe pas";
+	
 	public Admin(Scanner sc) {
 		this.sc = sc;
 		connexionJ = new ConnexionJ();
@@ -39,23 +41,34 @@ public class Admin {
 		String name;
 		Promotion promotion;
 		
-		System.out.println("Choisir la promotion où ajouter la classe: ");
-		name = sc.nextLine();
-		promotion = new Promotion(name);
+		do {
+			System.out.println("Choisir la promotion où ajouter la classe: ");
+			name = sc.nextLine();
+			promotion = new Promotion(name);
+			
+			if(managerDB.insertClasse(promotion))
+				System.out.println("Classe enregistré");
+			else
+				System.out.println("La promotion n'existe pas");
+			
+			System.out.println("Rééssayer? : Press y ");
+		}while(sc.nextLine().equals("y"));
 		
-		if(managerDB.insertClasse(promotion))
-			System.out.println("Classe enregistré");
-		else
-			System.out.println("La promotion n'existe pas");
+		
 	}
 	
-	public void createStudent() {
-		Student student = new Student(sc);
-		student.createStudent();
-		if(managerDB.insertStudent(student))
-			System.out.println("Etudiant ajouté");
-		else
-			System.out.println("La classe n'existe pas");
+	public void createNewStudent() {
+		do {
+			Student student = new Student(sc);
+			student.createStudent();
+			if(managerDB.insertStudent(student))
+				System.out.println("Etudiant ajouté");
+			else
+				System.out.println("La classe n'existe pas");
+			
+			System.out.println("Rééssayer? : Press 1 ");
+		}while(sc.nextInt() == 1);
+		sc.nextLine();
 	}
 	
 	public void addStudentToClasse() {
@@ -75,6 +88,41 @@ public class Admin {
 			
 			System.out.println("Voulez-vous continuer à en ajouter? : Press 1 ");
 		}while(sc.nextInt() == 1);
+		sc.nextLine();
+	}
+	
+	public void addCoursToClasse() {
+		int idCours;
+		int idClasse;
+		int idProfesseur;
+		
+		do {
+			
+			System.out.println("Choisir l'id de la classe où ajouter cours: ");
+			idClasse = sc.nextInt();
+			
+			System.out.println("Choix du cours: ");
+			idCours = sc.nextInt();
+			
+			System.out.println("Choix du professeur: ");
+			idProfesseur = sc.nextInt();
+			
+			if(!managerDB.insertCoursToClasse(idClasse, idCours, idProfesseur))
+				System.out.println(ERROR_EXIST);	
+			
+			
+			System.out.println("Voulez-vous continuer à en ajouter? : Press 1 ");
+		}while(sc.nextInt() == 1);
+		sc.nextLine();
+	}
+	
+	public void createNewCours() {
+		Cours cours = new Cours(sc);
+		cours.fillCours();
+		if(managerDB.insertCours(cours))
+			System.out.println("Cours créé");
+		else
+			System.out.println("Une information est invalide");
 	}
 	
 	

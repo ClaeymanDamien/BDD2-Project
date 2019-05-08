@@ -5,7 +5,6 @@ import java.util.Scanner;
 public class Tuteur {
 	private int id;
 	private Coordonnees coordonnees;
-	private Scanner sc;
 	
 	public Tuteur(String nom, String prenom, String adresse, String codePostal, String ville, String tel, String email) {
 		this.coordonnees = new Coordonnees(nom, prenom, adresse, codePostal, ville, tel, email);
@@ -24,7 +23,6 @@ public class Tuteur {
 	
 	public Tuteur(Scanner sc) {
 		this.coordonnees = new Coordonnees(sc);
-		this.sc = sc;
 	}
 
 	public void createTuteur() {
@@ -49,8 +47,5 @@ public class Tuteur {
 		this.coordonnees = coordonnees;
 	}
 	
-	public void setSc(Scanner sc) {
-		this.sc = sc;
-	}
 	
 }

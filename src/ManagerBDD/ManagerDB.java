@@ -55,7 +55,6 @@ public class ManagerDB {
 				"VALUES(?, ?, ?)";
 		
 		try {
-			
 			preparedStatement = db.prepareStatement(insertSQL);
 			preparedStatement.setInt(1, student.getIdClasse());
 			preparedStatement.setInt(2, idCoordonnees);
@@ -104,20 +103,19 @@ public class ManagerDB {
 	
 	public Boolean insertCours(Cours cours) {
 		String insertSQL = "INSERT INTO cours"+
-				"(idProfesseur, Nom, Description, Annee, Coefficient, PourcentageDE, PourcentageTP, PourcentageProjet) "+
-				"VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
+				"(Nom, Description, Annee, Coefficient, PourcentageDE, PourcentageTP, PourcentageProjet) "+
+				"VALUES(?, ?, ?, ?, ?, ?, ?)";
 		
 		try {
 			
 			preparedStatement = db.prepareStatement(insertSQL);
-			preparedStatement.setInt(1, cours.getIdProfesseur());
-			preparedStatement.setString(2, cours.getNom());
-			preparedStatement.setString(3, cours.getDescription());
-			preparedStatement.setString(4, cours.getAnnee());
-			preparedStatement.setFloat(5, cours.getCoefficient());
-			preparedStatement.setFloat(6, cours.getPourcentageDE());
-			preparedStatement.setFloat(7, cours.getPourcentageTP());
-			preparedStatement.setFloat(8, cours.getPourcentageProjet());
+			preparedStatement.setString(1, cours.getNom());
+			preparedStatement.setString(2, cours.getDescription());
+			preparedStatement.setString(3, cours.getAnnee());
+			preparedStatement.setDouble(4, cours.getCoefficient());
+			preparedStatement.setDouble(5, cours.getPourcentageDE());
+			preparedStatement.setDouble(6, cours.getPourcentageTP());
+			preparedStatement.setDouble(7, cours.getPourcentageProjet());
 			preparedStatement.executeUpdate();
 			
 			return true;
@@ -142,6 +140,24 @@ public class ManagerDB {
 			preparedStatement.executeUpdate();
 			return true;
 		} catch (Exception e) {
+			return false;
+		}
+	}
+	
+	public Boolean insertCoursToClasse(int idClasse, int idCours, int idProfesseur) {
+		String insertSQL = "INSERT INTO estdispense"+
+				"(idClasse, idCours, idProfesseur) "+
+				"VALUES(?, ?, ?)";
+		
+		try {
+			preparedStatement = db.prepareStatement(insertSQL);
+			preparedStatement.setInt(1, idClasse);
+			preparedStatement.setInt(2, idCours);
+			preparedStatement.setInt(3, idProfesseur);
+			preparedStatement.executeUpdate();
+			return true;
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
 			return false;
 		}
 	}
