@@ -15,8 +15,11 @@ import School.Tuteur;
 /*
  * TODO
  * 
- * Faire création Professeur
+ *
  * Création d'une insertion de note par le prof (il y a que lui qui peut ajouter des notes de sa matière)
+ * -> Je suis dans ManagerDB j'ai fait la sélection des épreuves et là je dois faire la sélections de toutes les notes de l'épreuve
+ * 
+ * 
  * Création d'une modification des notes par l'administration
  */
 public class Main {

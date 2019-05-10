@@ -8,6 +8,7 @@ import java.sql.Statement;
 
 import School.Coordonnees;
 import School.Cours;
+import School.Epreuve;
 import School.Promotion;
 import School.Student;
 import School.Tuteur;
@@ -185,6 +186,32 @@ public class ManagerDB {
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 			return false;
+		}
+	}
+	
+	/*
+	 * NoteManagerDB
+	 */
+	public Epreuve selectEpreuve(String id) {
+		Epreuve epreuve = null;
+		String selectSQL = "SELECT * FROM epreuve WHERE idEpreuve ="+ id;
+		try {
+			statement = db.prepareStatement(selectSQL);
+			resultSet = statement.executeQuery(selectSQL);
+			
+			if(resultSet.next()) {
+				epreuve = new Epreuve(resultSet.getString("idEpreuve"), 
+						resultSet.getInt("idCours"), 
+						resultSet.getInt("type"), 
+						resultSet.getDate("date"));
+				
+				
+			}
+			
+			return epreuve;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
 		}
 	}
 	

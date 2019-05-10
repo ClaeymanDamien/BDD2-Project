@@ -84,8 +84,11 @@ CREATE TABLE Classe(
 
 CREATE TABLE Epreuve(
         IdEpreuve Varchar (50) NOT NULL ,
+        idCours Int NOT NULL,
+        type Int NOT NULL,
         date      Date NOT NULL
 	,CONSTRAINT Epreuve_PK PRIMARY KEY (IdEpreuve)
+        ,CONSTRAINT Epreuve_Cours_FK FOREIGN KEY (idCours) REFERENCES Cours(idCours)
 )ENGINE=InnoDB;
 
 
@@ -142,7 +145,7 @@ CREATE TABLE estDispense(
 CREATE TABLE Passe(
         IdEpreuve Varchar (50) NOT NULL ,
         idEleve   Int NOT NULL ,
-        Note      Float NOT NULL
+        Note      Double NOT NULL
 	,CONSTRAINT Passe_PK PRIMARY KEY (IdEpreuve,idEleve)
 
 	,CONSTRAINT Passe_Epreuve_FK FOREIGN KEY (IdEpreuve) REFERENCES Epreuve(IdEpreuve)

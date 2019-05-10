@@ -12,10 +12,7 @@ public class Cours {
 	private double pourcentageTP;
 	private double pourcentageProjet;
 	private Scanner sc;
-	
-	
-	
-	
+
 	public Cours(int id, String nom, String description, String annee, double coefficient,
 			double pourcentageDE, double pourcentageTP, double pourcentageProjet) {
 		this.id = id;
@@ -27,8 +24,6 @@ public class Cours {
 		this.pourcentageTP = pourcentageTP;
 		this.pourcentageProjet = pourcentageProjet;
 	}
-	
-	
 	
 	public Cours(String nom, String description, String annee, double coefficient, double pourcentageDE,
 			double pourcentageTP, double pourcentageProjet) {

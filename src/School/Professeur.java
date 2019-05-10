@@ -1,9 +1,6 @@
 package School;
 
 import java.util.Scanner;
-
-import com.sun.corba.se.pept.transport.Connection;
-
 import ManagerBDD.ConnexionJ;
 import ManagerBDD.ManagerDB;
 
@@ -15,6 +12,9 @@ public class Professeur {
 	private Coordonnees coordonnees;
 	private int idCoordonnees;
 	
+	/*
+	 * Constructeur
+	 */
 	public Professeur(Scanner sc) {
 		this.sc = sc;
 		coordonnees = new Coordonnees(sc);
@@ -37,8 +37,8 @@ public class Professeur {
 		this.coordonnees = new Coordonnees(nom, prenom, adresse, codePostal, ville, tel, email);
 	}
 	
-	public Professeur(int idTuteur ,String nom, String prenom, String adresse, String codePostal, String ville, String tel, String email) {
-		this.id = idTuteur;
+	public Professeur(int idProfesseur ,String nom, String prenom, String adresse, String codePostal, String ville, String tel, String email) {
+		this.id = idProfesseur;
 		this.coordonnees = new Coordonnees(nom, prenom, adresse, codePostal, ville, tel, email);
 	}
 
@@ -59,6 +59,25 @@ public class Professeur {
 		this.idCoordonnees = idCoordonnees;
 	}
 
+	/*
+	 * Action
+	 */
+	
+	public void createProfesseur() {
+		System.out.println("Formulaire professeur: ");
+		System.out.println();
+		coordonnees.createCoordonnees();
+	}
+	
+	public void studentsMarks() {
+		
+		do {
+			System.out.println("Choisir le nom de l'épreuve: ");
+			sc.nextLine();
+		}while(true);
+	}
+	
+	
 	@Override
 	public String toString() {
 		String output = "Professeur: \n";
@@ -67,11 +86,7 @@ public class Professeur {
 		return output;
 	}
 	
-	public void createTuteur() {
-		System.out.println("Formulaire professeur: ");
-		System.out.println();
-		coordonnees.createCoordonnees();
-	}
+	
 
 	public int getId() {
 		return id;
