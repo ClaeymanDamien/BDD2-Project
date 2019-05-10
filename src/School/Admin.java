@@ -7,9 +7,9 @@ import ManagerBDD.ManagerDB;
 
 public class Admin {
 
-	ConnexionJ connexionJ;
-	ManagerDB managerDB;
-	Scanner sc;
+	private ConnexionJ connexionJ;
+	private ManagerDB managerDB;
+	private Scanner sc;
 	
 	private static final String ERROR_EXIST = "Une des information n'existe pas";
 	
@@ -69,6 +69,10 @@ public class Admin {
 			System.out.println("Rééssayer? : Press 1 ");
 		}while(sc.nextInt() == 1);
 		sc.nextLine();
+	}
+	
+	public void updateStudent() {
+		
 	}
 	
 	public void addStudentToClasse() {

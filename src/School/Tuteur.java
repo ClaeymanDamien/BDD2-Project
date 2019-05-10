@@ -22,7 +22,11 @@ public class Tuteur {
 	}
 	
 	
-	
+	public Tuteur(int id, int idCoordonnees) {
+		this.id = id;
+		this.idCoordonnees = idCoordonnees;
+	}
+
 	public Tuteur(int id, Coordonnees coordonnees, int idCoordonnees) {
 		this.id = id;
 		this.coordonnees = coordonnees;
@@ -34,11 +38,18 @@ public class Tuteur {
 	}
 	
 	
-	
 	public Tuteur(Scanner sc) {
 		this.coordonnees = new Coordonnees(sc);
 	}
 
+	@Override
+	public String toString() {
+		String output = "Tuteur: \n";
+		output += coordonnees;
+		
+		return output;
+	}
+	
 	public void createTuteur() {
 		System.out.println("Formulaire tuteur: ");
 		System.out.println();
@@ -59,6 +70,14 @@ public class Tuteur {
 
 	public void setCoordonnees(Coordonnees coordonnees) {
 		this.coordonnees = coordonnees;
+	}
+	
+	public int getIdCoordonnees() {
+		return idCoordonnees;
+	}
+	
+	public void setIdCoordonnees(int idCoordonnees) {
+		this.idCoordonnees = idCoordonnees;
 	}
 	
 	

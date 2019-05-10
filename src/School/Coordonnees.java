@@ -68,6 +68,21 @@ public class Coordonnees {
 		email = sc.nextLine();	
 	}
 	
+	@Override
+	public String toString() {
+		String output = "==================\n";
+		output += "Coordonnées: \n";
+		output += "Nom: "+ nom +"\n";
+		output += "Prenom: "+ prenom +"\n";
+		output += "Adresse: "+adresse +"\n";
+		output += "Code postal: "+ codePostal +"\n";
+		output += "Ville: "+ ville +"\n";
+		output += "Téléphone: "+ tel +"\n";
+		output += "Email: "+ email +"\n";
+		output += "==================\n";
+		return output;
+	}
+	
 	/*
 	 * Getter / Setter
 	 */

@@ -108,9 +108,35 @@ public class ManagerDB {
 		return true;
 	}
 	
+	public Student selectStudent(int id) {
+		Student student = null;
+		String selectSQL = "SELECT * FROM etudiant WHERE idEleve ="+ id;
+		try {
+			statement = db.prepareStatement(selectSQL);
+			resultSet = statement.executeQuery(selectSQL);
+			
+			if(resultSet.next()) {
+				student = new Student(
+						resultSet.getInt("idEleve"), 
+						resultSet.getInt("idCoordonnees"), 
+						resultSet.getInt("idClasse"), 
+						resultSet.getInt("idTuteur")
+						);
+				student.setCoordonnees(selectCoordonnees(student.getIdCoordonnees()));
+				student.setTuteur(selectTuteur(student.getIdTuteur()));
+			}
+			
+			return student;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
 	/*
 	 * CoursManagerDB
 	 */
+	
 	
 	public Cours selectCours(int id) {
 		Cours cours = null;
@@ -203,25 +229,7 @@ public class ManagerDB {
 	 * PromotionManagerDB
 	 */
 	
-	/*public Boolean ifPromotionExist(String name) {
-		resultSet = selectPromotion(name);
-		System.out.println(resultSet);
-		if(resultSet == null)
-			return false;
-		else
-			return true;
-	}
 	
-	public ResultSet selectPromotion(String id) {
-		String selectSQL = "SELECT * FROM promotion WHERE idPromotion ="+ id;
-		try {
-			statement = db.prepareStatement(selectSQL);
-			return statement.executeQuery(selectSQL);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}
-	}*/
 	
 	public void insertPromotion(Promotion promotion) {
 		String insertSQL = "INSERT INTO promotion"+
@@ -291,6 +299,30 @@ public class ManagerDB {
 		}
 	}
 	
+	public Coordonnees selectCoordonnees(int id) {
+		Coordonnees coordonnees = null;
+		String selectSQL = "SELECT * FROM coordonnees WHERE idCoordonnees ="+ id;
+		try {
+			statement = db.prepareStatement(selectSQL);
+			resultSet = statement.executeQuery(selectSQL);
+			
+			if(resultSet.next()) {
+				coordonnees = new  Coordonnees(resultSet.getInt("idCoordonnees"), 
+						resultSet.getString("Nom"), 
+						resultSet.getString("Prenom"), 
+						resultSet.getString("Adresse"), 
+						resultSet.getString("CodePostal"), 
+						resultSet.getString("Ville"), 
+						resultSet.getString("Tel"), 
+						resultSet.getString("Email"));
+			}
+			
+			return coordonnees;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
 	/*
 	 * TuteurManagerDB
 	 */
@@ -319,5 +351,26 @@ public class ManagerDB {
 	
 	public boolean updateTuteur(Tuteur tuteur) {
 		return updateCoordonnees(tuteur.getCoordonnees());
+	}
+	
+	public Tuteur selectTuteur(int id) {
+		Tuteur tuteur = null;
+		String selectSQL = "SELECT * FROM tuteur WHERE idTuteur ="+ id;
+		try {
+			statement = db.prepareStatement(selectSQL);
+			resultSet = statement.executeQuery(selectSQL);
+			
+			if(resultSet.next()) {
+				tuteur = new Tuteur(
+						resultSet.getInt("idTuteur"), 
+						resultSet.getInt("idCoordonnees"));
+				tuteur.setCoordonnees(selectCoordonnees(tuteur.getIdCoordonnees()));
+			}
+			
+			return tuteur;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 }

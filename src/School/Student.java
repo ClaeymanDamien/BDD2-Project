@@ -53,8 +53,6 @@ public class Student {
 		coordonnees = new Coordonnees();
 	}
 	
-	
-
 	public Student(Scanner sc) {
 		tuteur = new Tuteur(sc);
 		coordonnees = new Coordonnees(sc);
@@ -63,7 +61,10 @@ public class Student {
 
 	@Override
 	public String toString() {
-		String output="";
+		String output="Etudiant: "+ id +"\n";
+		output +="Dans la classe: "+ idClasse +"\n";
+		output += coordonnees+"\n";
+		output += tuteur;
 		
 		return output;
 	}

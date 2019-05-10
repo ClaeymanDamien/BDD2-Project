@@ -7,6 +7,7 @@ import ManagerBDD.ManagerDB;
 import School.Admin;
 import School.Coordonnees;
 import School.Cours;
+import School.Professeur;
 import School.Promotion;
 import School.Student;
 import School.Tuteur;
@@ -15,6 +16,8 @@ import School.Tuteur;
  * TODO
  * 
  * Faire création Professeur
+ * Création d'une insertion de note par le prof (il y a que lui qui peut ajouter des notes de sa matière)
+ * Création d'une modification des notes par l'administration
  */
 public class Main {
 	public static void main(String[] args) {
@@ -27,11 +30,13 @@ public class Main {
 		
 		managerDB.insertCoordonnees(coordonnees);*/
 		
-		Coordonnees coordonnees = new Coordonnees(2,"Damien", "Claeyman", "14B Berthelot", "94800", "Villejuif", "0667876545", "dclmn@hotmail.fr");
+		/*Coordonnees coordonnees = new Coordonnees(2,"Damien", "Claeyman", "14B Berthelot", "94800", "Villejuif", "0667876545", "dclmn@hotmail.fr");
 		Tuteur tuteur = new Tuteur(1, coordonnees, 2);
-		managerDB.updateTuteur(tuteur);
+		 System.out.println(tuteur);*/
 		
-		
+		System.out.println(managerDB.selectStudent(1));
+		Professeur professeur = new Professeur();
+		System.out.println(professeur);
 		/*Promotion promotion = new Promotion("TropBien");
 		managerDB.insertPromotion(promotion);*/
 			
