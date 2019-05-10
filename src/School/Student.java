@@ -61,6 +61,12 @@ public class Student {
 		this.sc = sc;
 	}
 
+	@Override
+	public String toString() {
+		String output="";
+		
+		return output;
+	}
 	public void createStudent() {
 		
 		System.out.println("Formulaire étudiant: \n");

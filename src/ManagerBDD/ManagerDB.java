@@ -97,9 +97,46 @@ public class ManagerDB {
 		}
 	}
 	
+	public Boolean updateStudent(Student student) {
+		if(!updateClasseStudent(student.getIdClasse(), student.getId()))
+			return false;
+		if(!updateCoordonnees(student.getCoordonnees()))
+			return false;
+		if(!updateTuteur(student.getTuteur()))
+			return false;
+		
+		return true;
+	}
+	
 	/*
 	 * CoursManagerDB
 	 */
+	
+	public Cours selectCours(int id) {
+		Cours cours = null;
+		String selectSQL = "SELECT * FROM cours WHERE idCours ="+ id;
+		try {
+			statement = db.prepareStatement(selectSQL);
+			resultSet = statement.executeQuery(selectSQL);
+			
+			if(resultSet.next()) {
+				cours = new Cours(
+						resultSet.getString("Nom"), 
+						resultSet.getString("Description"), 
+						resultSet.getString("Annee"), 
+						resultSet.getDouble("Coefficient"), 
+						resultSet.getDouble("PourcentageDE"), 
+						resultSet.getDouble("PourcentageTP"),
+						resultSet.getDouble("PourcentageProjet")
+						);
+			}
+			
+			return cours;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
 	
 	public Boolean insertCours(Cours cours) {
 		String insertSQL = "INSERT INTO cours"+
@@ -234,6 +271,26 @@ public class ManagerDB {
 		}
 	}
 	
+	public boolean updateCoordonnees(Coordonnees coordonnees) {
+		String updateSQL = "UPDATE coordonnees SET Nom=?, Prenom=?, Adresse=?, CodePostal=?, Ville=?, Tel=?, Email=? WHERE idCoordonnees=? ";
+		try {
+			preparedStatement = db.prepareStatement(updateSQL);
+			preparedStatement.setString(1, coordonnees.getNom());
+			preparedStatement.setString(2, coordonnees.getPrenom());
+			preparedStatement.setString(3, coordonnees.getAdresse());
+			preparedStatement.setString(4, coordonnees.getCodePostal());
+			preparedStatement.setString(5, coordonnees.getVille());
+			preparedStatement.setString(6, coordonnees.getTel());
+			preparedStatement.setString(7, coordonnees.getEmail());
+			preparedStatement.setInt(8, coordonnees.getIdCoordonnees());
+			preparedStatement.executeUpdate();
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
 	/*
 	 * TuteurManagerDB
 	 */
@@ -258,5 +315,9 @@ public class ManagerDB {
 			System.out.println(e.getMessage());
 			return -1;
 		}
+	}
+	
+	public boolean updateTuteur(Tuteur tuteur) {
+		return updateCoordonnees(tuteur.getCoordonnees());
 	}
 }

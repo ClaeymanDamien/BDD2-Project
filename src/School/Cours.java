@@ -66,6 +66,18 @@ public class Cours {
 		pourcentageProjet = sc.nextDouble();
 	}
 	
+	@Override
+	public String toString() {
+		String output = "Matière: " + nom + "\n";
+		output += "===================\n" + description + "\n===================\n";
+		output += "Coefficient: " + coefficient +"\n";
+		output += "Evaluation: \n";
+		output += "DE: " + pourcentageDE + "\n";
+		output += "TP: " + pourcentageTP + "\n";
+		output += "Projet: " + pourcentageProjet + "\n";
+		return output;
+	}
+	
 	/*
 	 * Setter / Getter
 	 */

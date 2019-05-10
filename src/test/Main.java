@@ -22,13 +22,15 @@ public class Main {
 		ConnexionJ connexionJ = new ConnexionJ();
 		ManagerDB managerDB = new ManagerDB(connexionJ.getDb());
 		Scanner sc = new Scanner(System.in);
-		/*Coordonnees coordonnees = new Coordonnees("Damien", "Claeyman", "14B Berthelot", "94800", "Villejuif", "0667876545", "dclmn@hotmail.fr");
+		/*Coordonnees coordonnees = new Coordonnees(1,"Damien", "Claeyman", "14B Berthelot", "94800", "Villejuif", "0667876545", "dclmn@hotmail.fr");
+		System.out.println(managerDB.updateCoordonnees(coordonnees));
+		
 		managerDB.insertCoordonnees(coordonnees);*/
 		
+		Coordonnees coordonnees = new Coordonnees(2,"Damien", "Claeyman", "14B Berthelot", "94800", "Villejuif", "0667876545", "dclmn@hotmail.fr");
+		Tuteur tuteur = new Tuteur(1, coordonnees, 2);
+		managerDB.updateTuteur(tuteur);
 		
-		/*Tuteur tuteur = new Tuteur("Damien", "Claeyman", "14B Berthelot", "94800", "Villejuif", "0667876545", "dclmn@hotmail.fr");
-		managerDB.insertTuteur(tuteur);
-		*/
 		
 		/*Promotion promotion = new Promotion("TropBien");
 		managerDB.insertPromotion(promotion);*/
@@ -36,11 +38,11 @@ public class Main {
 		/*Coordonnees coordonnees = new Coordonnees(sc);
 	
 		coordonnees.createCoordonnees();*/
-		Admin admin = new Admin(sc);
+		//Admin admin = new Admin(sc);
 		//admin.createNewPromotion();
 		
 		//admin.addStudentToClasse();
-		admin.createNewClasse();
+		//admin.createNewClasse();
 		//admin.createNewStudent();
 		//admin.addCoursToClasse();
 		
@@ -48,6 +50,7 @@ public class Main {
 		managerDB.insertCours(cours);*/
 		
 		
+		//System.out.println(managerDB.selectCours(1));
 		
 		
 		/*Tuteur tuteur = new Tuteur();
