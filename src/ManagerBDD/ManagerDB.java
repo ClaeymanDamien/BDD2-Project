@@ -259,6 +259,37 @@ public class ManagerDB {
 		}
 	}
 	
+	public List<Note> selectStudentNotes(int idStudent) {
+		List<Note> notes = new ArrayList<Note>();
+		Epreuve epreuve;
+		Note note;
+		
+		String selectSQL = "SELECT * FROM passe WHERE idEleve = ?";
+		
+		try {
+			
+			preparedStatement = db.prepareStatement(selectSQL);
+			preparedStatement.setInt(1, idStudent);
+			ResultSet result = preparedStatement.executeQuery();
+
+			while(result.next()) {
+				note= new Note(
+						result.getInt("idEleve"), 
+						result.getString("idEpreuve"), 
+						result.getDouble("Note") 
+					);
+				note.setEpreuve(epreuve = selectEpreuve(result.getString("idEpreuve")));
+				note.setCours(selectCours(epreuve.getIdCours()));
+				notes.add(note);
+			}
+			
+			return notes;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
 	public Epreuve selectEpreuve(String id) {
 		Epreuve epreuve = null;
 	
@@ -543,6 +574,40 @@ public class ManagerDB {
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
+		}
+	}
+	
+	public Boolean checkIfTeachingToStudent(int idStudent, int idProfesseur) {
+		
+		//Ici je veux check si le prof et l'élève on un cours en commun
+		int idClasse;
+		String selectIdClasse  = "SELECT idClasse FROM etudiant WHERE idEleve = ?";
+		String selectIdProf = "SELECT idProfesseur FROM estdispense WHERE idClasse = ? AND idProfesseur = ?";
+		
+		try {
+			preparedStatement = db.prepareStatement(selectIdClasse);
+			preparedStatement.setInt(1, idStudent);
+			resultSet = preparedStatement.executeQuery();
+			
+			if(resultSet.next()) {
+				idClasse = resultSet.getInt("idClasse");
+				
+				preparedStatement = db.prepareStatement(selectIdProf);
+				preparedStatement.setInt(1, idClasse);
+				preparedStatement.setInt(2, idProfesseur);
+				resultSet = preparedStatement.executeQuery();
+				
+				if(resultSet.next())
+					return true;
+				else
+					return false;
+			}
+			else {
+				return false;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
 		}
 	}
 	/*

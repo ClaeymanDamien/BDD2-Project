@@ -1,6 +1,10 @@
 package School;
 
+import java.util.List;
 import java.util.Scanner;
+
+import ManagerBDD.ManagerDB;
+
 
 public class Student {
 	private int id;
@@ -10,6 +14,8 @@ public class Student {
 	private Tuteur tuteur;
 	private Coordonnees coordonnees;
 	private Scanner sc;
+	private List<Note> notes;
+	private ManagerDB managerDB;
 
 	/*
 	 * Constructeur 
@@ -68,6 +74,7 @@ public class Student {
 		
 		return output;
 	}
+	
 	public void createStudent() {
 		
 		System.out.println("Formulaire étudiant: \n");
@@ -80,6 +87,41 @@ public class Student {
 		sc.nextLine();
 		
 	}
+	
+	public void printMarksTranscript() {
+		loadMarks();
+		String type ="*";
+		Double coef = 0.;
+		System.out.println("\nRelevé de notes: ");
+		System.out.println("***************************");
+		
+		for(Note note : notes) {
+			System.out.print(note.getCours().getNom());
+			
+			if(note.getEpreuve().getType() == Epreuve.TYPE_DE) {
+				type = "DE";
+				coef = note.getCours().getPourcentageDE();
+			}
+			else if (note.getEpreuve().getType() == Epreuve.TYPE_TP) {
+				type = "TP";
+				coef = note.getCours().getPourcentageTP();
+			}	
+			else if (note.getEpreuve().getType() == Epreuve.TYPE_PROJET) {
+				type = "PJ";
+				coef = note.getCours().getPourcentageProjet();
+			}
+				
+			System.out.print(" - "+ type +"("+ coef +") : ");
+			System.out.println(note.getNote());
+		}
+		System.out.println("");
+		
+	}
+	
+	public void loadMarks() {
+		notes = managerDB.selectStudentNotes(id);
+	}
+	
 	/*
 	 * Getters / Setters
 	 */
@@ -130,5 +172,17 @@ public class Student {
 	
 	public void setIdTuteur(int idTuteur) {
 		this.idTuteur = idTuteur;
+	}
+	
+	public List<Note> getNotes() {
+		return notes;
+	}
+	
+	public void setNotes(List<Note> notes) {
+		this.notes = notes;
+	}
+	
+	public void setManagerDB(ManagerDB managerDB) {
+		this.managerDB = managerDB;
 	}
 }

@@ -137,6 +137,24 @@ public class Professeur {
 		
 	}
 	
+	public void seeStudentMarks() {
+		int idStudent;
+		Student student;
+		System.out.println("Choisir id de l'élève: ");
+		idStudent = sc.nextInt();
+		
+		if(managerDB.checkIfTeachingToStudent(idStudent, id)) {
+			student = managerDB.selectStudent(idStudent);
+			student.setManagerDB(managerDB);
+			student.printMarksTranscript();
+		}
+		else {
+			System.out.println("Vous n'êtes pas le professeur de cette étudiant");
+		}
+		
+	}
+	
+	
 	
 	@Override
 	public String toString() {

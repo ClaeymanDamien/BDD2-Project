@@ -38,12 +38,16 @@ public class Main {
 		managerDB.insertPromotion(promotion);*/
 			
 		//managerDB.insertProfesseur(new Professeur(new Coordonnees("Damien", "Claeyman", "g", "g", "g", "g", "g")));
-		/*Professeur professeur = managerDB.selectProfesseur(1);
+		Professeur professeur = managerDB.selectProfesseur(1);
 		professeur.setSc(sc);
 		professeur.setManagerDB(managerDB);
-		professeur.studentsMarks();*/
+		professeur.seeStudentMarks();
 		
+		/*Student student = managerDB.selectStudent(1);
+		student.setManagerDB(managerDB);
+		student.printMarksTranscript();*/
 		
+		//System.out.println(managerDB.checkIfTeachingToStudent(1, 1));
 		/*
 		 * Il faut que je test select all notes
 		 */
@@ -58,9 +62,9 @@ public class Main {
 		/*Coordonnees coordonnees = new Coordonnees(sc);
 	
 		coordonnees.createCoordonnees();*/
-		Admin admin = new Admin(sc);
+		/*Admin admin = new Admin(sc);
 		//admin.createNewPromotion();
-		admin.updateNote();
+		admin.updateNote();*/
 		//admin.addStudentToClasse();
 		//admin.createNewClasse();
 		//admin.createNewStudent();
@@ -76,8 +80,8 @@ public class Main {
 		/*Tuteur tuteur = new Tuteur();
 		tuteur.createTuteur();*/
 
-		Authentification authentification = new Authentification();
-		authentification.authentification();
+		//Authentification authentification = new Authentification();
+		//authentification.authentification();
 
 		sc.close();
 		System.out.println("Fait");
