@@ -129,5 +129,20 @@ public class Admin {
 			System.out.println("Une information est invalide");
 	}
 	
+	public void updateNote() {
+		String idEpreuve;
+		int idStudent;
+		Double note;
+		
+		System.out.println("Nom de l'épreuve: ");
+		idEpreuve = sc.nextLine();
+		System.out.println("ID de l'élève: ");
+		idStudent = sc.nextInt();
+		System.out.println("Note à modifier: ");
+		note = sc.nextDouble();
+		
+		managerDB.updateNote(idEpreuve, idStudent, note);
+		
+	}
 	
 }

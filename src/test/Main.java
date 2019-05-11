@@ -1,5 +1,6 @@
 package test;
 
+import java.util.Date;
 import java.util.Scanner;
 
 import ManagerBDD.ConnexionJ;
@@ -7,20 +8,19 @@ import ManagerBDD.ManagerDB;
 import School.Admin;
 import School.Coordonnees;
 import School.Cours;
+import School.Epreuve;
+import School.MyDate;
+import School.Note;
 import School.Professeur;
 import School.Promotion;
 import School.Student;
 import School.Tuteur;
 
+
 /*
  * TODO
  * 
- *
- * Création d'une insertion de note par le prof (il y a que lui qui peut ajouter des notes de sa matière)
- * -> Je suis dans ManagerDB j'ai fait la sélection des épreuves et là je dois faire la sélections de toutes les notes de l'épreuve
  * 
- * 
- * Création d'une modification des notes par l'administration
  */
 public class Main {
 	public static void main(String[] args) {
@@ -37,18 +37,36 @@ public class Main {
 		Tuteur tuteur = new Tuteur(1, coordonnees, 2);
 		 System.out.println(tuteur);*/
 		
-		System.out.println(managerDB.selectStudent(1));
-		Professeur professeur = new Professeur();
-		System.out.println(professeur);
+		//System.out.println(managerDB.selectStudent(1));
+		//Professeur professeur = new Professeur();
+		//System.out.println(professeur);*/
 		/*Promotion promotion = new Promotion("TropBien");
 		managerDB.insertPromotion(promotion);*/
 			
+		//managerDB.insertProfesseur(new Professeur(new Coordonnees("Damien", "Claeyman", "g", "g", "g", "g", "g")));
+		/*Professeur professeur = managerDB.selectProfesseur(1);
+		professeur.setSc(sc);
+		professeur.setManagerDB(managerDB);
+		professeur.studentsMarks();*/
+		
+		
+		/*
+		 * Il faut que je test select all notes
+		 */
+		//Epreuve epreuve = new Epreuve("lol", 1, 1, new MyDate(20, 03, 2000));
+		//managerDB.insertEpreuve(epreuve);
+		//System.out.println(managerDB.selectAllEleveByClasse(1));
+		
+		
+		//managerDB.insertNote(new Note(1, "Pec", 13.6));
+		
+		
 		/*Coordonnees coordonnees = new Coordonnees(sc);
 	
 		coordonnees.createCoordonnees();*/
-		//Admin admin = new Admin(sc);
+		Admin admin = new Admin(sc);
 		//admin.createNewPromotion();
-		
+		admin.updateNote();
 		//admin.addStudentToClasse();
 		//admin.createNewClasse();
 		//admin.createNewStudent();

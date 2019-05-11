@@ -86,7 +86,10 @@ CREATE TABLE Epreuve(
         IdEpreuve Varchar (50) NOT NULL ,
         idCours Int NOT NULL,
         type Int NOT NULL,
-        date      Date NOT NULL
+        jour Int NOT NULL,
+        mois Int NOT NULL,
+        annee Int NOT NULL,
+        etat Int NOT NULL
 	,CONSTRAINT Epreuve_PK PRIMARY KEY (IdEpreuve)
         ,CONSTRAINT Epreuve_Cours_FK FOREIGN KEY (idCours) REFERENCES Cours(idCours)
 )ENGINE=InnoDB;

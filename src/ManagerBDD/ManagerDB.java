@@ -4,11 +4,15 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
-
+import java.util.ArrayList;
+import java.util.List;
 
 import School.Coordonnees;
 import School.Cours;
 import School.Epreuve;
+import School.MyDate;
+import School.Note;
+import School.Professeur;
 import School.Promotion;
 import School.Student;
 import School.Tuteur;
@@ -190,25 +194,133 @@ public class ManagerDB {
 	}
 	
 	/*
-	 * NoteManagerDB
+	 * EpreuveManagerDB
 	 */
+	
+	public Boolean insertEpreuve(Epreuve epreuve) {
+		
+		String insertSQL = "INSERT INTO epreuve"+
+				"(idEpreuve, idCours, type, jour, mois, annee, etat) "+
+				"VALUES(?, ?, ?, ?, ?, ?)";
+		
+		try {
+			
+			preparedStatement = db.prepareStatement(insertSQL);
+			preparedStatement.setString(1, epreuve.getIdEpreuve());
+			preparedStatement.setInt(2, epreuve.getIdCours());
+			preparedStatement.setInt(3, epreuve.getType());
+			preparedStatement.setInt(4, epreuve.getDate().getJour());
+			preparedStatement.setInt(5, epreuve.getDate().getMois());
+			preparedStatement.setInt(6, epreuve.getDate().getAnnee());
+			preparedStatement.setInt(7, 0);
+			
+			preparedStatement.executeUpdate();
+			
+			return true;
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			return false;
+		}
+	}
+	
+	public Boolean insertNote(Note note) {
+		String insertSQL = "INSERT INTO passe"+
+				"(idEpreuve, idEleve, Note)"+
+				"VALUES(?, ?, ?)";
+		
+		try {
+			
+			preparedStatement = db.prepareStatement(insertSQL);
+			preparedStatement.setString(1, note.getIdEpreuve());
+			preparedStatement.setInt(2, note.getIdStudent());
+			preparedStatement.setDouble(3, note.getNote());
+			
+			preparedStatement.executeUpdate();
+			
+			return true;
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			return false;
+		}
+	}
+	
+	public Boolean updateNote(String idEpreuve, int idStudent, double note) {
+		String updateSQL = "UPDATE passe SET Note=? WHERE idEpreuve=? AND idEleve=?";
+		try {
+			preparedStatement = db.prepareStatement(updateSQL);
+			preparedStatement.setDouble(1, note);
+			preparedStatement.setString(2, idEpreuve);
+			preparedStatement.setInt(3, idStudent);
+			preparedStatement.executeUpdate();
+			return true;
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			return false;
+		}
+	}
+	
 	public Epreuve selectEpreuve(String id) {
 		Epreuve epreuve = null;
-		String selectSQL = "SELECT * FROM epreuve WHERE idEpreuve ="+ id;
+	
+		String selectSQL = "SELECT * FROM epreuve WHERE IdEpreuve = ?";
+		try {
+			
+			preparedStatement = db.prepareStatement(selectSQL);
+			preparedStatement.setString(1, id);
+			resultSet = preparedStatement.executeQuery();
+			
+			if(resultSet.next()) {
+				
+				epreuve = new Epreuve(resultSet.getString("idEpreuve"), 
+						resultSet.getInt("idCours"), 
+						resultSet.getInt("type"), 
+						new MyDate(
+								resultSet.getInt("jour"), 
+								resultSet.getInt("mois"), 
+								resultSet.getInt("annee")
+								),
+						resultSet.getInt("etat")
+						);
+			}
+			
+			return epreuve;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	public Boolean updateEtatEpreuve(String idEpreuve, int etat) {
+		String updateSQL = "UPDATE epreuve SET etat = ? WHERE IdEpreuve = ?";
+		try {
+			preparedStatement = db.prepareStatement(updateSQL);
+			preparedStatement.setInt(1, etat);
+			preparedStatement.setString(2, idEpreuve);
+			preparedStatement.executeUpdate();
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
+	public List<Note> selectAllNoteByEpreuve(int id){
+		List<Note> notes = new ArrayList<Note>();
+		Note note = null;
+		String selectSQL = "SELECT * FROM notes WHERE idEpreuve ="+ id;
 		try {
 			statement = db.prepareStatement(selectSQL);
 			resultSet = statement.executeQuery(selectSQL);
 			
-			if(resultSet.next()) {
-				epreuve = new Epreuve(resultSet.getString("idEpreuve"), 
-						resultSet.getInt("idCours"), 
-						resultSet.getInt("type"), 
-						resultSet.getDate("date"));
-				
-				
+			while(resultSet.next()) {
+				note = new Note(
+						resultSet.getInt("idEleve"), 
+						resultSet.getString("idEpreuve"), 
+						resultSet.getDouble("Note"));
+				notes.add(note);
 			}
 			
-			return epreuve;
+			return notes;
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
@@ -252,6 +364,45 @@ public class ManagerDB {
 		}
 	}
 	
+	public Integer selectIdProfDispenceCours(int idClasse, int idCours) {
+		
+		String selectSQL = "SELECT * FROM estdispense WHERE idClasse = ? AND idCours=?";
+		try {
+			preparedStatement = db.prepareStatement(selectSQL);
+			
+			preparedStatement.setInt(1, idClasse);
+			preparedStatement.setInt(2, idCours);
+			resultSet = preparedStatement.executeQuery();
+			
+			if(resultSet.next()) {
+				return resultSet.getInt("idProfesseur");
+			}
+			
+			return -1;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return -1;
+		}
+	}
+	
+	public List<Student> selectAllEleveByClasse(int idClasse){
+		List<Student> students = new ArrayList<Student>();
+		
+		String selectSQL = "SELECT * FROM etudiant WHERE idClasse ="+ idClasse;
+		try {
+			statement = db.prepareStatement(selectSQL);
+			ResultSet result = statement.executeQuery(selectSQL);
+			
+			while(result.next()) {	
+				students.add(selectStudent(result.getInt("idEleve")));
+			}
+			
+			return students;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
 	/*
 	 * PromotionManagerDB
 	 */
@@ -345,6 +496,50 @@ public class ManagerDB {
 			}
 			
 			return coordonnees;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	/*
+	 * ProfesseurManagerDB
+	 */
+	
+	public Boolean insertProfesseur(Professeur professeur) {
+		int idCoordonnees = insertCoordonnees(professeur.getCoordonnees());
+			
+		String insertSQL = "INSERT INTO professeur"+
+				"(idCoordonnees) "+
+				"VALUES(?)";
+		try {
+			preparedStatement = db.prepareStatement(insertSQL);
+			preparedStatement.setInt(1, idCoordonnees);
+			preparedStatement.executeUpdate();
+			
+			return true;
+			
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			return false;
+		}
+	}
+	
+	public Professeur selectProfesseur(int idProfesseur) {
+		Professeur professeur = null;
+		String selectSQL = "SELECT * FROM professeur WHERE idProfesseur ="+ idProfesseur;
+		try {
+			statement = db.prepareStatement(selectSQL);
+			resultSet = statement.executeQuery(selectSQL);
+			
+			if(resultSet.next()) {
+				professeur = new Professeur(
+						resultSet.getInt("idProfesseur"), 
+						resultSet.getInt("idCoordonnees"));
+				professeur.setCoordonnees(selectCoordonnees(professeur.getIdCoordonnees()));
+			}
+			
+			return professeur;
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;

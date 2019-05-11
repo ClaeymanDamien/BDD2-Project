@@ -1,28 +1,32 @@
 package School;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 public class Epreuve {
 	private String idEpreuve;
 	private int idCours;
 	private int type;
-	private Date date;
+	private MyDate date;
 	private ArrayList<Note> notes;
+	private int etat;
 	
 	
-	private static final int TYPE_DE = 1;
-	private static final int TYPE_TP = 2;
-	private static final int TYPE_PROJET = 3;
+	static final int TYPE_DE = 1;
+	static final int TYPE_TP = 2;
+	static final int TYPE_PROJET = 3;
+	static final int ETAT_NOTE_SAISIE = 1;
+	static final int ETAT_NOTE_NON_SAISIE = 0;
 	
 	
 	
 	
-	public Epreuve(String idEpreuve, int idCours, int type, Date date) {
+	
+	public Epreuve(String idEpreuve, int idCours, int type, MyDate date, int etat) {
 		this.idEpreuve = idEpreuve;
 		this.idCours = idCours;
 		this.type = type;
 		this.date = date;
+		this.etat = etat;
 	}
 	public String getIdEpreuve() {
 		return idEpreuve;
@@ -42,10 +46,10 @@ public class Epreuve {
 	public void setType(int type) {
 		this.type = type;
 	}
-	public Date getDate() {
+	public MyDate getDate() {
 		return date;
 	}
-	public void setDate(Date date) {
+	public void setDate(MyDate date) {
 		this.date = date;
 	}
 	
@@ -55,5 +59,13 @@ public class Epreuve {
 	
 	public void setNotes(ArrayList<Note> notes) {
 		this.notes = notes;
+	}
+	
+	public int getEtat() {
+		return etat;
+	}
+	
+	public void setEtat(int etat) {
+		this.etat = etat;
 	}
 }

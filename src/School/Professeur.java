@@ -1,6 +1,8 @@
 package School;
 
+import java.util.List;
 import java.util.Scanner;
+
 import ManagerBDD.ConnexionJ;
 import ManagerBDD.ManagerDB;
 
@@ -12,12 +14,18 @@ public class Professeur {
 	private Coordonnees coordonnees;
 	private int idCoordonnees;
 	
+	
+	
 	/*
 	 * Constructeur
 	 */
 	public Professeur(Scanner sc) {
 		this.sc = sc;
 		coordonnees = new Coordonnees(sc);
+	}
+	
+	public Professeur(Coordonnees coordonnees) {
+		this.coordonnees = coordonnees;
 	}
 	
 	public Professeur(Scanner sc, ConnexionJ db, int id, Coordonnees coordonnees, int idCoordonnees) {
@@ -70,11 +78,63 @@ public class Professeur {
 	}
 	
 	public void studentsMarks() {
+		Epreuve epreuve = null;
+		String idEpreuve = null;
+		List<Student> students = null;
+		Note note = null;
+		int idClasse = -1;
 		
+		Boolean success = false;
 		do {
 			System.out.println("Choisir le nom de l'épreuve: ");
+			idEpreuve = sc.nextLine();
+			epreuve = managerDB.selectEpreuve(idEpreuve);
+			
+			if(epreuve != null) {
+				System.out.println("Choisir le numéro de la classe");
+				idClasse = sc.nextInt();
+				sc.nextLine();
+				
+				if(managerDB.selectIdProfDispenceCours(idClasse, epreuve.getIdCours()) == id) {
+					success = true;
+				}
+				else {
+					System.out.println("Vous ne vous occupez pas de ce cours");
+				}
+			}else {
+				System.out.println("L'épreuve n'existe pas");
+			}
+
+	
+		}while(!success);
+		
+		if(epreuve.getEtat() == Epreuve.ETAT_NOTE_NON_SAISIE) {
+			students = managerDB.selectAllEleveByClasse(idClasse);
+			
+			for(Student student : students) {
+				System.out.println("Elève: "
+						+student.getCoordonnees().getPrenom() 
+						+" "
+						+student.getCoordonnees().getNom()
+						+"\nEntrer sa note: "
+					);
+				
+				note = new Note(
+						student.getId(), 
+						epreuve.getIdEpreuve(), 
+						sc.nextDouble()
+					);
+				
+				managerDB.insertNote(note);
+			}
 			sc.nextLine();
-		}while(true);
+			managerDB.updateEtatEpreuve(epreuve.getIdEpreuve(), 1);
+			System.out.println("Toute les notes on étaient relevées");
+		}
+		else {
+			System.out.println("Les notes ont déjà été rentré");
+		}
+		
 	}
 	
 	
@@ -116,5 +176,8 @@ public class Professeur {
 		this.managerDB = managerDB;
 	}
 	
+	public void setSc(Scanner sc) {
+		this.sc = sc;
+	}
 	
 }
