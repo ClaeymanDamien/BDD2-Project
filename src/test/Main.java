@@ -80,11 +80,17 @@ public class Main {
 		/*Tuteur tuteur = new Tuteur();
 		tuteur.createTuteur();*/
 
-		//Authentification authentification = new Authentification();
-		//authentification.authentification();
+		System.out.println("Fait\n");
+		Recherche_Eleves recherche_liste = new Recherche_Eleves(2, 1);
 
+		recherche_liste.recherche_eleves_classe();
+		recherche_liste.recherche_eleves_promotion();
+		System.out.println("\n");
+		/*
+		Authentication authentication = new Authentication();
+		authentication.authentification();
+		*/
 		sc.close();
-		System.out.println("Fait");
 	}
 	
 	/*public static void main(String[] args) {
