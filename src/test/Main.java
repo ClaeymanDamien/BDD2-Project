@@ -4,13 +4,7 @@ import java.util.Scanner;
 
 import ManagerBDD.ConnexionJ;
 import ManagerBDD.ManagerDB;
-import School.Admin;
-import School.Coordonnees;
-import School.Cours;
-import School.Professeur;
-import School.Promotion;
-import School.Student;
-import School.Tuteur;
+import School.*;
 
 /*
  * TODO
@@ -63,7 +57,10 @@ public class Main {
 		
 		/*Tuteur tuteur = new Tuteur();
 		tuteur.createTuteur();*/
-		
+
+		Authentification authentification = new Authentification();
+		authentification.authentification();
+
 		sc.close();
 		System.out.println("Fait");
 	}

@@ -36,7 +36,6 @@ CREATE TABLE Professeur(
         ,CONSTRAINT Professeur_Coordonnees0_FK FOREIGN KEY (idCoordonnees) REFERENCES Coordonnees(idCoordonnees)
 )ENGINE=InnoDB;
 
-
 #------------------------------------------------------------
 # Table: Cours
 #------------------------------------------------------------
@@ -49,11 +48,10 @@ CREATE TABLE Cours(
         Coefficient       Double NOT NULL ,
         PourcentageDE     Double NOT NULL ,
         PourcentageTP     Double NOT NULL ,
-        PourcentageProjet Double NOT NULL 
+        PourcentageProjet Double NOT NULL
 	,CONSTRAINT Cours_PK PRIMARY KEY (idCours)
 
 )ENGINE=InnoDB;
-
 
 #------------------------------------------------------------
 # Table: Promotion
@@ -63,7 +61,6 @@ CREATE TABLE Promotion(
         idPromotion Varchar (20) NOT NULL
 	,CONSTRAINT Promotion_PK PRIMARY KEY (idPromotion)
 )ENGINE=InnoDB;
-
 
 #------------------------------------------------------------
 # Table: Classe
@@ -76,7 +73,6 @@ CREATE TABLE Classe(
 
 	,CONSTRAINT Classe_Promotion_FK FOREIGN KEY (idPromotion) REFERENCES Promotion(idPromotion)
 )ENGINE=InnoDB;
-
 
 #------------------------------------------------------------
 # Table: Epreuve
@@ -91,7 +87,6 @@ CREATE TABLE Epreuve(
         ,CONSTRAINT Epreuve_Cours_FK FOREIGN KEY (idCours) REFERENCES Cours(idCours)
 )ENGINE=InnoDB;
 
-
 #------------------------------------------------------------
 # Table: Tuteur
 #------------------------------------------------------------
@@ -103,7 +98,6 @@ CREATE TABLE Tuteur(
 	,CONSTRAINT Tuteur_PK PRIMARY KEY (IdTuteur)
         ,CONSTRAINT Tuteur_Coordonnees0_FK FOREIGN KEY (idCoordonnees) REFERENCES Coordonnees(idCoordonnees)
 )ENGINE=InnoDB;
-
 
 #------------------------------------------------------------
 # Table: Etudiant
@@ -121,7 +115,6 @@ CREATE TABLE Etudiant(
         ,CONSTRAINT Etudiant_Coordonnees1_FK FOREIGN KEY (idCoordonnees) REFERENCES Coordonnees(idCoordonnees)
 )ENGINE=InnoDB;
 
-
 #------------------------------------------------------------
 # Table: estDispense
 #------------------------------------------------------------
@@ -129,14 +122,13 @@ CREATE TABLE Etudiant(
 CREATE TABLE estDispense(
         idClasse Int NOT NULL ,
         idCours  Int NOT NULL,
-        idProfesseur Int NOT NULL 
+        idProfesseur Int NOT NULL
 	,CONSTRAINT estDispense_PK PRIMARY KEY (idClasse,idCours)
 
 	,CONSTRAINT estDispense_Classe_FK FOREIGN KEY (idClasse) REFERENCES Classe(idClasse)
 	,CONSTRAINT estDispense_Cours0_FK FOREIGN KEY (idCours) REFERENCES Cours(idCours)
         ,CONSTRAINT Cours_Professeur1_FK FOREIGN KEY (idProfesseur) REFERENCES Professeur(idProfesseur)
 )ENGINE=InnoDB;
-
 
 #------------------------------------------------------------
 # Table: Passe
@@ -152,3 +144,13 @@ CREATE TABLE Passe(
 	,CONSTRAINT Passe_Etudiant0_FK FOREIGN KEY (idEleve) REFERENCES Etudiant(idEleve)
 )ENGINE=InnoDB;
 
+#------------------------------------------------------------
+# Table: Authentification
+#------------------------------------------------------------
+
+CREATE TABLE Authentification(
+        email     Varchar (50) NOT NULL ,
+        mdp       Varchar (20) NOT NULL ,
+        fonction  int NOT NULL
+    ,CONSTRAINT Authentification_PK PRIMARY KEY (email)
+)ENGINE=InnoDB;
