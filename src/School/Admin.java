@@ -1,29 +1,27 @@
 package School;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
-import ManagerBDD.ConnexionJ;
+
 import ManagerBDD.ManagerDB;
 
 public class Admin {
 
-	private ConnexionJ connexionJ;
 	private ManagerDB managerDB;
 	private Scanner sc;
 	
+	static final int ADMIN_ID = 123456;
+	static final String ADMIN_MDP = "myefrei";
+	
 	private static final String ERROR_EXIST = "Une des information n'existe pas";
 	
-	public Admin(Scanner sc) {
+	public Admin(Scanner sc, ManagerDB managerDB) {
 		this.sc = sc;
-		connexionJ = new ConnexionJ();
-		managerDB = new ManagerDB(connexionJ.getDb());
+		this.managerDB = managerDB;
 	}
 
-	public Admin() {
-		connexionJ = new ConnexionJ();
-		managerDB = new ManagerDB(connexionJ.getDb());
-	}
-	
 	public void createNewPromotion()
 	{
 		String name;
@@ -35,6 +33,7 @@ public class Admin {
 		promotion = new Promotion(name);
 		managerDB.insertPromotion(promotion);
 		
+		System.out.println("Promotion créée");
 	}
 	
 	public void createNewClasse() {
@@ -51,12 +50,30 @@ public class Admin {
 			else
 				System.out.println("La promotion n'existe pas");
 			
-			System.out.println("Rééssayer? : Press y ");
+			System.out.println("Rééssayer? : Press y sinon n ");
 		}while(sc.nextLine().equals("y"));
-		
 		
 	}
 	
+	public void createNewProfesseur() {
+		do {
+			Professeur professeur = new Professeur(sc);
+			professeur.createProfesseur();
+			if(managerDB.insertProfesseur(professeur))
+				System.out.println("Professeur ajouté");
+			else
+				System.out.println("La classe n'existe pas");
+			
+			System.out.println("Rééssayer? : Press 1 sinon 2");
+		}while(sc.nextInt() == 1);
+		sc.nextLine();
+	}
+	public Professeur selectProfesseur() {
+		System.out.println("Id du professeur: ");
+		Professeur professeur = managerDB.selectProfesseur(sc.nextInt());
+		sc.nextLine();
+		return professeur;
+	}
 	public void createNewStudent() {
 		do {
 			Student student = new Student(sc);
@@ -66,13 +83,36 @@ public class Admin {
 			else
 				System.out.println("La classe n'existe pas");
 			
-			System.out.println("Rééssayer? : Press 1 ");
+			System.out.println("Rééssayer? : Press 1 sinon 2");
 		}while(sc.nextInt() == 1);
 		sc.nextLine();
 	}
-	
+	public Student selectStudent() {
+		System.out.println("Id de l'étudiant: ");
+		Student student = managerDB.selectStudent(sc.nextInt());
+		sc.nextLine();
+		return student;
+	}
 	public void updateStudent() {
-		
+		do {
+			
+			Student currentStudent = selectStudent();
+			Student student = new Student(sc);
+			student.setId(currentStudent.getId());
+			student.getCoordonnees().setIdCoordonnees(currentStudent.getIdCoordonnees());
+			student.getTuteur().setId(currentStudent.getIdTuteur());
+			student.getTuteur().getCoordonnees().setIdCoordonnees(currentStudent.getTuteur().getIdCoordonnees());
+			
+			student.createStudent();
+			
+			managerDB.updateStudent(student);
+			
+			System.out.println("Etudiant modifié");
+			
+			
+			System.out.println("Rééssayer? : Press 1 sinon 2");
+		}while(sc.nextInt() == 1);
+		sc.nextLine();
 	}
 	
 	public void addStudentToClasse() {
@@ -87,10 +127,10 @@ public class Admin {
 			idEleve = sc.nextInt();
 			
 			if(!managerDB.updateClasseStudent(idClasse, idEleve))
-				System.out.println("La classe ou l'élève n'existe pas");	
+				System.out.println("La classe où il y a l'étudiant, n'existe pas");	
 			
 			
-			System.out.println("Voulez-vous continuer à en ajouter? : Press 1 ");
+			System.out.println("Voulez-vous continuer à en ajouter? : Press 1 sinon 2");
 		}while(sc.nextInt() == 1);
 		sc.nextLine();
 	}
@@ -115,7 +155,7 @@ public class Admin {
 				System.out.println(ERROR_EXIST);	
 			
 			
-			System.out.println("Voulez-vous continuer à en ajouter? : Press 1 ");
+			System.out.println("Voulez-vous continuer à en ajouter? : Press 1 sinon 2");
 		}while(sc.nextInt() == 1);
 		sc.nextLine();
 	}
@@ -141,8 +181,21 @@ public class Admin {
 		System.out.println("Note à modifier: ");
 		note = sc.nextDouble();
 		
+		
 		managerDB.updateNote(idEpreuve, idStudent, note);
 		
+	}
+	
+	public void validationDesNotes() {
+		List<String> idEpreuves = new ArrayList<String>();
+		System.out.println("Choisir la promotion où valider les notes");
+		
+		idEpreuves = managerDB.selectEpreuvesPromo(sc.nextLine());
+		
+		for(String idEpreuve : idEpreuves) {
+			managerDB.updateEtatEpreuve(idEpreuve, Epreuve.ETAT_BULLETIN_EDITE);
+		}
+		System.out.println("Notes validées");
 	}
 	
 }

@@ -13,6 +13,7 @@ public class Professeur {
 	private int id;
 	private Coordonnees coordonnees;
 	private int idCoordonnees;
+	private Authentification authentification;
 	
 	
 	
@@ -22,6 +23,7 @@ public class Professeur {
 	public Professeur(Scanner sc) {
 		this.sc = sc;
 		coordonnees = new Coordonnees(sc);
+		authentification = new Authentification(sc);
 	}
 	
 	public Professeur(Coordonnees coordonnees) {
@@ -75,6 +77,7 @@ public class Professeur {
 		System.out.println("Formulaire professeur: ");
 		System.out.println();
 		coordonnees.createCoordonnees();
+		authentification.askMdp();
 	}
 	
 	public void studentsMarks() {
@@ -108,31 +111,36 @@ public class Professeur {
 	
 		}while(!success);
 		
-		if(epreuve.getEtat() == Epreuve.ETAT_NOTE_NON_SAISIE) {
+		if(epreuve.getEtat() != Epreuve.ETAT_BULLETIN_EDITE) {
 			students = managerDB.selectAllEleveByClasse(idClasse);
-			
-			for(Student student : students) {
-				System.out.println("Elève: "
-						+student.getCoordonnees().getPrenom() 
-						+" "
-						+student.getCoordonnees().getNom()
-						+"\nEntrer sa note: "
-					);
-				
-				note = new Note(
-						student.getId(), 
-						epreuve.getIdEpreuve(), 
-						sc.nextDouble()
-					);
-				
-				managerDB.insertNote(note);
+			if(!managerDB.searchIfMarksEntered(students.get(0).getId(), epreuve.getIdEpreuve())) {
+				for(Student student : students) {
+					System.out.println("Elève: "
+							+student.getCoordonnees().getPrenom() 
+							+" "
+							+student.getCoordonnees().getNom()
+							+"\nEntrer sa note: "
+						);
+					
+					note = new Note(
+							student.getId(), 
+							epreuve.getIdEpreuve(), 
+							sc.nextDouble()
+						);
+					
+					managerDB.insertNote(note);
+				}
+				sc.nextLine();
+				managerDB.updateEtatEpreuve(epreuve.getIdEpreuve(), 1);
+				System.out.println("Toute les notes on étaient relevées");
 			}
-			sc.nextLine();
-			managerDB.updateEtatEpreuve(epreuve.getIdEpreuve(), 1);
-			System.out.println("Toute les notes on étaient relevées");
+			else {
+				System.out.println("Les notes ont déjà été pour cette matière");
+			}
+			
 		}
 		else {
-			System.out.println("Les notes ont déjà été rentré");
+			System.out.println("Le bulletin a été édité");
 		}
 		
 	}
@@ -151,6 +159,59 @@ public class Professeur {
 		else {
 			System.out.println("Vous n'êtes pas le professeur de cette étudiant");
 		}
+		
+	}
+	
+	public void seeStudentBulletin() {
+		int idStudent;
+		Student student;
+		System.out.println("Choisir id de l'élève: ");
+		idStudent = sc.nextInt();
+		
+		if(managerDB.checkIfTeachingToStudent(idStudent, id)) {
+			student = managerDB.selectStudent(idStudent);
+			student.setManagerDB(managerDB);
+			student.generateBulletin();
+		}
+		else {
+			System.out.println("Vous n'êtes pas le professeur de cette étudiant");
+		}
+		
+	}
+	
+	public void updateNote() {
+		String idEpreuve;
+		int idStudent;
+		Double note;
+		Epreuve epreuve = null;
+		
+		System.out.println("Nom de l'épreuve: ");
+		idEpreuve = sc.nextLine();
+		epreuve = managerDB.selectEpreuve(idEpreuve);
+		
+		if(epreuve != null) {
+			if(epreuve.getEtat() != Epreuve.ETAT_BULLETIN_EDITE) {
+				System.out.println("ID de l'élève: ");
+				idStudent = sc.nextInt();
+				if(managerDB.checkIfTeachingToStudent(idStudent, id)) {
+					System.out.println("Note à modifier: ");
+					note = sc.nextDouble();
+					
+					managerDB.updateNote(idEpreuve, idStudent, note);
+					System.out.println("Note modifié");
+				}
+				else {
+					System.out.println("Vous n'ête pas le professeur de cette élève");
+				}
+			}
+			else {
+				System.out.println("Impossible: Le bulletin a déjà était édité");
+			}
+		}
+		else {
+			System.out.println("L'épreuve n'existe pas");
+		}
+		
 		
 	}
 	
@@ -196,6 +257,14 @@ public class Professeur {
 	
 	public void setSc(Scanner sc) {
 		this.sc = sc;
+	}
+	
+	public Authentification getAuthentification() {
+		return authentification;
+	}
+	
+	public void setAuthentification(Authentification authentification) {
+		this.authentification = authentification;
 	}
 	
 }

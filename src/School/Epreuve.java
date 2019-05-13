@@ -14,8 +14,9 @@ public class Epreuve {
 	static final int TYPE_DE = 1;
 	static final int TYPE_TP = 2;
 	static final int TYPE_PROJET = 3;
-	static final int ETAT_NOTE_SAISIE = 1;
-	static final int ETAT_NOTE_NON_SAISIE = 0;
+	public static final int ETAT_BULLETIN_EDITE = 1;
+	public static final int ETAT_BULLETIN_NON_EDITE = 0;
+	
 	
 	
 	

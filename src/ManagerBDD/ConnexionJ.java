@@ -7,6 +7,8 @@ public class ConnexionJ {
 
 	private Connection db;
 	
+	static final String DB_NAME = "test4";
+	
 	public ConnexionJ() {
 		String url;
 		String user;
@@ -15,7 +17,7 @@ public class ConnexionJ {
 	    try{
 	        Class.forName("com.mysql.cj.jdbc.Driver");
 	        
-	        url="jdbc:mysql://localhost/test2?serverTimezone="+Calendar.getInstance().getTimeZone().getID();
+	        url="jdbc:mysql://localhost/"+DB_NAME+"?serverTimezone="+Calendar.getInstance().getTimeZone().getID();
 	        user="root";
 	        password="";
 	        

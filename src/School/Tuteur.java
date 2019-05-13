@@ -80,5 +80,4 @@ public class Tuteur {
 		this.idCoordonnees = idCoordonnees;
 	}
 	
-	
 }

@@ -7,6 +7,8 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import School.Authentification;
+import School.Classe;
 import School.Coordonnees;
 import School.Cours;
 import School.Epreuve;
@@ -60,20 +62,28 @@ public class ManagerDB {
 				"VALUES(?, ?, ?)";
 		
 		try {
-			preparedStatement = db.prepareStatement(insertSQL);
+			preparedStatement = db.prepareStatement(insertSQL, Statement.RETURN_GENERATED_KEYS);
 			preparedStatement.setInt(1, student.getIdClasse());
 			preparedStatement.setInt(2, idCoordonnees);
 			preparedStatement.setInt(3, idTuteur);
 			preparedStatement.executeUpdate();
+			
+			//Sert à récupérer le dernier ID rentré
+			ResultSet result = preparedStatement.getGeneratedKeys();
+			result.next();
+			
+			insertAuthentification(new Authentification(result.getInt(1), student.getAuthentification().getMdp() , 1));
+			
 			return true;
+			
+				
 		} catch (Exception e) {
+			insertStudentWithoutClasse(student, idCoordonnees, idTuteur);
 			return false;
 		}
 	}
 	
-	public void insertStudentWithoutClasse(Student student) {
-		
-		int idCoordonnees = insertCoordonnees(student.getCoordonnees());
+	public void insertStudentWithoutClasse(Student student, int idCoordonnees, int idTuteur) {
 		
 		String insertSQL = "INSERT INTO etudiant"+
 				"(idCoordonnees, idTuteur) "+
@@ -82,11 +92,11 @@ public class ManagerDB {
 		try {
 			preparedStatement = db.prepareStatement(insertSQL);
 			preparedStatement.setInt(1, idCoordonnees);
-			preparedStatement.setInt(2, student.getIdTuteur());
+			preparedStatement.setInt(2, idTuteur);
 			preparedStatement.executeUpdate();
 			
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			System.out.println("Echec de l'insertion");
 		}
 	}
 	
@@ -97,20 +107,14 @@ public class ManagerDB {
 			statement.execute(updateSQL);
 			return true;
 		} catch (Exception e) {
-			e.printStackTrace();
 			return false;
 		}
 	}
 	
-	public Boolean updateStudent(Student student) {
-		if(!updateClasseStudent(student.getIdClasse(), student.getId()))
-			return false;
-		if(!updateCoordonnees(student.getCoordonnees()))
-			return false;
-		if(!updateTuteur(student.getTuteur()))
-			return false;
-		
-		return true;
+	public void updateStudent(Student student) {
+		updateClasseStudent(student.getIdClasse(), student.getId());	
+		updateCoordonnees(student.getCoordonnees());
+		updateTuteur(student.getTuteur());
 	}
 	
 	public Student selectStudent(int id) {
@@ -133,7 +137,7 @@ public class ManagerDB {
 			
 			return student;
 		} catch (Exception e) {
-			e.printStackTrace();
+			System.out.println("L'étudiant n'existe pas");
 			return null;
 		}
 	}
@@ -164,7 +168,7 @@ public class ManagerDB {
 			
 			return cours;
 		} catch (Exception e) {
-			e.printStackTrace();
+			System.out.println("Le cours n'existe pas");
 			return null;
 		}
 	}
@@ -188,7 +192,7 @@ public class ManagerDB {
 			
 			return true;
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			System.out.println("L'insertion a échoué");
 			return false;
 		}
 	}
@@ -218,7 +222,7 @@ public class ManagerDB {
 			
 			return true;
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			System.out.println("L'insertion a échoué");
 			return false;
 		}
 	}
@@ -239,7 +243,7 @@ public class ManagerDB {
 			
 			return true;
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			System.out.println("L'insertion a échoué");
 			return false;
 		}
 	}
@@ -254,7 +258,7 @@ public class ManagerDB {
 			preparedStatement.executeUpdate();
 			return true;
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			System.out.println("L'update a échoué");
 			return false;
 		}
 	}
@@ -285,11 +289,59 @@ public class ManagerDB {
 			
 			return notes;
 		} catch (Exception e) {
-			e.printStackTrace();
+			System.out.println("Notes introuvables");
 			return null;
 		}
 	}
 	
+	public Boolean searchIfMarksEntered(int idStudent, String IdEpreuve) {
+		
+		String selectSQL = "SELECT Note FROM passe WHERE idEleve = ? AND idEpreuve = ?";
+		
+		try {
+			
+			preparedStatement = db.prepareStatement(selectSQL);
+			preparedStatement.setInt(1, idStudent);
+			preparedStatement.setString(2, IdEpreuve);
+			resultSet = preparedStatement.executeQuery();
+			
+			if(resultSet.next()) 
+				return true;
+			else
+				return false;
+
+		} catch (Exception e) {
+			System.out.println("Les notes n'ont pas été trouvé");
+			return false;
+		}
+
+	}
+	public List<String> selectEpreuvesPromo(String promo){
+		
+		List<String> idEpreuves = new ArrayList<String>();
+		List<Classe> classes = null;
+		String selectSQL = "SELECT idEpreuve FROM estdispense d, epreuve e WHERE d.idClasse = ? AND d.idCours = e.idCours";
+		
+		classes = selectClasseByPromotion(promo);
+		
+		try {
+			
+			for(Classe classe : classes) {
+				preparedStatement = db.prepareStatement(selectSQL);
+				preparedStatement.setInt(1, classe.getId());
+				resultSet = preparedStatement.executeQuery();
+				
+				while(resultSet.next()) {
+					idEpreuves.add(resultSet.getString("idEpreuve"));
+				}
+			}
+			
+			return idEpreuves;
+		} catch (Exception e) {
+			System.out.println("La promotion n'existe pas ou il n'y a pas d'épreuves");
+			return null;
+		}
+	}
 	public Epreuve selectEpreuve(String id) {
 		Epreuve epreuve = null;
 	
@@ -316,7 +368,7 @@ public class ManagerDB {
 			
 			return epreuve;
 		} catch (Exception e) {
-			e.printStackTrace();
+			System.out.println("Epreuve introuvable");
 			return null;
 		}
 	}
@@ -330,7 +382,7 @@ public class ManagerDB {
 			preparedStatement.executeUpdate();
 			return true;
 		} catch (Exception e) {
-			e.printStackTrace();
+			System.out.println("L'update a échoué");
 			return false;
 		}
 	}
@@ -353,8 +405,38 @@ public class ManagerDB {
 			
 			return notes;
 		} catch (Exception e) {
-			e.printStackTrace();
+			System.out.println("Les notes sont introuvables");
 			return null;
+		}
+	}
+	
+	public Boolean checkIfStudentMarksAreValidated(int idStudent) {
+		String selectNoteEleve = "SELECT Note FROM passe WHERE idEleve = ?";
+		String selectEpreuveEtat1 = "SELECT etat FROM passe p, epreuve e  WHERE p.idEleve = ? AND e.idEpreuve = p.idEpreuve AND e.etat = ?";
+		try {
+			preparedStatement = db.prepareStatement(selectNoteEleve);
+			preparedStatement.setInt(1, idStudent);
+			resultSet = preparedStatement.executeQuery();
+			
+			if(resultSet.next()) {
+				preparedStatement = db.prepareStatement(selectEpreuveEtat1);
+				preparedStatement.setInt(1, idStudent);
+				preparedStatement.setInt(2, Epreuve.ETAT_BULLETIN_NON_EDITE);
+				resultSet = preparedStatement.executeQuery();
+				
+				if(resultSet.next())
+					return false;
+				else 
+					return true;
+			}
+			else {
+				return false;
+			}
+			
+
+		} catch (Exception e) {
+			System.out.println("Les notes sont introuvables");
+			return false;
 		}
 	}
 	
@@ -373,6 +455,7 @@ public class ManagerDB {
 			preparedStatement.executeUpdate();
 			return true;
 		} catch (Exception e) {
+			System.out.println("L'insertion a échoué");
 			return false;
 		}
 	}
@@ -390,7 +473,7 @@ public class ManagerDB {
 			preparedStatement.executeUpdate();
 			return true;
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			System.out.println("L'insertion a échoué");
 			return false;
 		}
 	}
@@ -411,7 +494,7 @@ public class ManagerDB {
 			
 			return -1;
 		} catch (Exception e) {
-			e.printStackTrace();
+			System.out.println("La sélection a échoué");
 			return -1;
 		}
 	}
@@ -430,7 +513,7 @@ public class ManagerDB {
 			
 			return students;
 		} catch (Exception e) {
-			e.printStackTrace();
+			System.out.println("La sélection a échoué");
 			return null;
 		}
 	}
@@ -451,11 +534,33 @@ public class ManagerDB {
 			preparedStatement.executeUpdate();
 			
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			System.out.println("L'insertion a échoué");
 		}
 	}
 	
-	
+	public List<Classe> selectClasseByPromotion(String idPromo){
+		
+		List<Classe> classes = new ArrayList<Classe>();
+		String selectSQL = "SELECT * FROM classe WHERE idPromotion = ?";
+		
+		try {
+			preparedStatement = db.prepareStatement(selectSQL);
+			preparedStatement.setString(1, idPromo);
+			resultSet = preparedStatement.executeQuery();
+			
+			while (resultSet.next()) {
+				classes.add(new Classe(
+						resultSet.getInt("idCLasse"), 
+						resultSet.getString("idPromotion")
+						));
+			}
+			
+			return classes;
+		} catch (Exception e) {
+			System.out.println("La sélection a échoué");
+			return null;
+		}
+	}
 	/*
 	 * CoordonneesManagerDB
 	 */
@@ -483,7 +588,7 @@ public class ManagerDB {
 			return resultSet.getInt(1);
 
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			System.out.println("L'insertion a échoué");
 			return -1;
 		}
 	}
@@ -503,7 +608,7 @@ public class ManagerDB {
 			preparedStatement.executeUpdate();
 			return true;
 		} catch (Exception e) {
-			e.printStackTrace();
+			System.out.println("L'update a échoué");
 			return false;
 		}
 	}
@@ -528,7 +633,7 @@ public class ManagerDB {
 			
 			return coordonnees;
 		} catch (Exception e) {
-			e.printStackTrace();
+			System.out.println("La sélection a échoué");
 			return null;
 		}
 	}
@@ -544,14 +649,19 @@ public class ManagerDB {
 				"(idCoordonnees) "+
 				"VALUES(?)";
 		try {
-			preparedStatement = db.prepareStatement(insertSQL);
+			preparedStatement = db.prepareStatement(insertSQL, Statement.RETURN_GENERATED_KEYS);
 			preparedStatement.setInt(1, idCoordonnees);
 			preparedStatement.executeUpdate();
 			
+			//Sert à récupérer le dernier ID rentré
+			ResultSet result = preparedStatement.getGeneratedKeys();
+			result.next();
+			
+			insertAuthentification(new Authentification(result.getInt(1), professeur.getAuthentification().getMdp() , 2));
 			return true;
 			
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			System.out.println("L'insertion a échoué");
 			return false;
 		}
 	}
@@ -572,7 +682,7 @@ public class ManagerDB {
 			
 			return professeur;
 		} catch (Exception e) {
-			e.printStackTrace();
+			System.out.println("La sélection a échoué");
 			return null;
 		}
 	}
@@ -606,7 +716,7 @@ public class ManagerDB {
 				return false;
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			System.out.println("Le check a échoué");
 			return false;
 		}
 	}
@@ -631,7 +741,7 @@ public class ManagerDB {
 			return resultSet.getInt(1);
 			
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			System.out.println("L'insertion a échoué");
 			return -1;
 		}
 	}
@@ -656,8 +766,54 @@ public class ManagerDB {
 			
 			return tuteur;
 		} catch (Exception e) {
-			e.printStackTrace();
+			System.out.println("La sélection a échoué");
 			return null;
+		}
+	}
+	
+	/*
+	 * Authentification
+	 */
+	public Boolean checkAuthentification(Authentification authentification) {
+		
+		String SQL = "SELECT * FROM authentification WHERE id=? AND mdp=? AND fonction=?";
+		try
+        {
+			preparedStatement = db.prepareStatement(SQL);
+            preparedStatement.setInt(1, authentification.getId());
+            preparedStatement.setString(2, authentification.getMdp());
+            preparedStatement.setInt(3, authentification.getFonction());
+            resultSet = preparedStatement.executeQuery();
+
+            if(resultSet.next())
+            	return true;
+            else 
+            	return false;
+        }
+        catch (Exception e)
+        {
+        	System.out.println("Le check a échoué");
+            return false;
+        }
+	}
+	
+	public Boolean insertAuthentification(Authentification authentification) {
+		
+		String insertSQL = "INSERT INTO authentification"+
+				"(id, mdp, fonction) "+
+				"VALUES(?,?,?)";
+		try {
+			preparedStatement = db.prepareStatement(insertSQL);
+			preparedStatement.setInt(1, authentification.getId());
+			preparedStatement.setString(2, authentification.getMdp());
+			preparedStatement.setInt(3, authentification.getFonction());
+			preparedStatement.executeUpdate();
+			
+			return true;
+			
+		} catch (Exception e) {
+			System.out.println("L'insertion a échoué");
+			return false;
 		}
 	}
 }

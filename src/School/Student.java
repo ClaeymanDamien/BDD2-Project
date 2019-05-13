@@ -16,6 +16,7 @@ public class Student {
 	private Scanner sc;
 	private List<Note> notes;
 	private ManagerDB managerDB;
+	private Authentification authentification;
 
 	/*
 	 * Constructeur 
@@ -62,6 +63,7 @@ public class Student {
 	public Student(Scanner sc) {
 		tuteur = new Tuteur(sc);
 		coordonnees = new Coordonnees(sc);
+		authentification = new Authentification(sc);
 		this.sc = sc;
 	}
 
@@ -79,6 +81,7 @@ public class Student {
 		
 		System.out.println("Formulaire étudiant: \n");
 		coordonnees.createCoordonnees();
+		authentification.askMdp();
 		
 		tuteur.createTuteur();
 		
@@ -93,7 +96,7 @@ public class Student {
 		String type ="*";
 		Double coef = 0.;
 		System.out.println("\nRelevé de notes: ");
-		System.out.println("***************************");
+		System.out.println("**************************************************************");
 		
 		for(Note note : notes) {
 			System.out.print(note.getCours().getNom());
@@ -122,6 +125,25 @@ public class Student {
 		notes = managerDB.selectStudentNotes(id);
 	}
 	
+	public void generateBulletin() {
+		if(managerDB.checkIfStudentMarksAreValidated(id)) {
+			System.out.println("\n\t\t\tBulletin 2019");
+			System.out.println("**************************************************************");
+			System.out.println("\n");
+			System.out.println("Elève: ");
+			System.out.println(coordonnees.getPrenom() +" "+ coordonnees.getNom());
+			System.out.println("Numéro d'étudiant: "+ id);
+			System.out.println("Dans la classe: "+ idClasse);
+			System.out.println("\n\t\t\t\t\t"+coordonnees.getAdresse());
+			System.out.println("\t\t\t\t\t"+coordonnees.getVille());
+			System.out.println("\t\t\t\t\t"+coordonnees.getCodePostal());
+			printMarksTranscript();
+		}
+		else {
+			System.out.println("Les notes n'ont pas encore été validé");
+		}
+	}
+	
 	/*
 	 * Getters / Setters
 	 */
@@ -140,6 +162,10 @@ public class Student {
 	
 	public void setCoordonnees(Coordonnees coordonnees) {
 		this.coordonnees = coordonnees;
+	}
+	
+	public void setCoordonneesSc(Scanner sc) {
+		this.coordonnees.setSc(sc);
 	}
 	
 	public Tuteur getTuteur() {
@@ -184,5 +210,17 @@ public class Student {
 	
 	public void setManagerDB(ManagerDB managerDB) {
 		this.managerDB = managerDB;
+	}
+	
+	public void setSc(Scanner sc) {
+		this.sc = sc;
+	}
+		
+	public Authentification getAuthentification() {
+		return authentification;
+	}
+	
+	public void setAuthentification(Authentification authentification) {
+		this.authentification = authentification;
 	}
 }

@@ -152,8 +152,8 @@ CREATE TABLE Passe(
 #------------------------------------------------------------
 
 CREATE TABLE Authentification(
-        email     Varchar (50) NOT NULL ,
+        id     Varchar (50) NOT NULL ,
         mdp       Varchar (20) NOT NULL ,
         fonction  int NOT NULL
-    ,CONSTRAINT Authentification_PK PRIMARY KEY (email)
+    ,CONSTRAINT Authentification_PK PRIMARY KEY (id, fonction)
 )ENGINE=InnoDB;
