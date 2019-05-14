@@ -56,6 +56,7 @@ public class Admin {
 	}
 	
 	public void createNewProfesseur() {
+		int retry;
 		do {
 			Professeur professeur = new Professeur(sc);
 			professeur.createProfesseur();
@@ -65,16 +66,34 @@ public class Admin {
 				System.out.println("La classe n'existe pas");
 			
 			System.out.println("Rééssayer? : Press 1 sinon 2");
-		}while(sc.nextInt() == 1);
-		sc.nextLine();
+			retry = sc.nextInt();
+			sc.nextLine();
+		}while(retry == 1);
 	}
+	
 	public Professeur selectProfesseur() {
 		System.out.println("Id du professeur: ");
 		Professeur professeur = managerDB.selectProfesseur(sc.nextInt());
 		sc.nextLine();
 		return professeur;
 	}
+	
+	public Cours selectCours() {
+		System.out.println("Id du cours: ");
+		Cours cours = managerDB.selectCours(sc.nextInt());
+		sc.nextLine();
+		return cours;
+	}
+	
+	public Epreuve selectEpreuve() {
+		System.out.println("Id de l'épreuve: ");
+		Epreuve epreuve = managerDB.selectEpreuve(sc.nextLine());
+
+		return epreuve;
+	}
+	
 	public void createNewStudent() {
+		int retry;
 		do {
 			Student student = new Student(sc);
 			student.createStudent();
@@ -84,9 +103,28 @@ public class Admin {
 				System.out.println("La classe n'existe pas");
 			
 			System.out.println("Rééssayer? : Press 1 sinon 2");
-		}while(sc.nextInt() == 1);
-		sc.nextLine();
+			retry = sc.nextInt();
+			sc.nextLine();
+		}while(retry == 1);
 	}
+	
+	public void createEpreuve() {
+		int retry;
+		do {
+			Epreuve epreuve = new Epreuve(sc);
+			epreuve.createEpreuve();
+			
+			if(managerDB.insertEpreuve(epreuve))
+				System.out.println("Epreuve ajouté");
+			else
+				System.out.println("La classe n'existe pas");
+			
+			System.out.println("Rééssayer? : Press 1 sinon 2");
+			retry = sc.nextInt();
+			sc.nextLine();
+		}while(retry == 1);
+	}
+	
 	public Student selectStudent() {
 		System.out.println("Id de l'étudiant: ");
 		Student student = managerDB.selectStudent(sc.nextInt());
@@ -94,6 +132,7 @@ public class Admin {
 		return student;
 	}
 	public void updateStudent() {
+		int retry;
 		do {
 			
 			Student currentStudent = selectStudent();
@@ -111,8 +150,9 @@ public class Admin {
 			
 			
 			System.out.println("Rééssayer? : Press 1 sinon 2");
-		}while(sc.nextInt() == 1);
-		sc.nextLine();
+			retry = sc.nextInt();
+			sc.nextLine();
+		}while(retry == 1);
 	}
 	
 	public void addStudentToClasse() {

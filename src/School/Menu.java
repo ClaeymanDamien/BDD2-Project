@@ -167,6 +167,9 @@ public class Menu {
 			System.out.println("12 - Afficher les informations d'un professeur");
 			System.out.println("13 - Liste d'une classe");
 			System.out.println("14 - Liste d'une promotion");
+			System.out.println("15 - Créer une épreuve");
+			System.out.println("16 - Afficher les détails d'une épreuve");
+			System.out.println("17 - Afficher les détails d'un cours");
 			System.out.print("Choix: ");
 			choice = sc.nextInt();
 			sc.nextLine();
@@ -214,6 +217,15 @@ public class Menu {
 				break;
 			case 14:
 				recherche_Eleves.searchByPromo();
+				break;
+			case 15:
+				admin.createEpreuve();
+				break;
+			case 16:
+				System.out.println(admin.selectEpreuve());
+				break;
+			case 17:
+				System.out.println(admin.selectCours());
 				break;
 			default:
 				System.out.println("Choix invalide");

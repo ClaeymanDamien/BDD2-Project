@@ -204,8 +204,8 @@ public class ManagerDB {
 	public Boolean insertEpreuve(Epreuve epreuve) {
 		
 		String insertSQL = "INSERT INTO epreuve"+
-				"(idEpreuve, idCours, type, jour, mois, annee, etat) "+
-				"VALUES(?, ?, ?, ?, ?, ?)";
+				"(IdEpreuve, idCours, type, jour, mois, annee, etat) "+
+				"VALUES(?, ?, ?, ?, ?, ?, ?)";
 		
 		try {
 			
@@ -222,6 +222,7 @@ public class ManagerDB {
 			
 			return true;
 		} catch (Exception e) {
+			e.printStackTrace();
 			System.out.println("L'insertion a échoué");
 			return false;
 		}

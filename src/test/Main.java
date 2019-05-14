@@ -8,6 +8,7 @@ import ManagerBDD.ManagerDB;
 
 import School.*;
 
+
 public class Main {
 	public static void main(String[] args) {
 		
@@ -16,7 +17,7 @@ public class Main {
 		Scanner sc = new Scanner(System.in);
 		Menu menu = new Menu(sc, managerDB, connexionJ);
 		int end;
-		
+
 		do {
 			menu.login();
 			menu.executeMenu();

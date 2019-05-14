@@ -1,6 +1,7 @@
 package School;
 
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class Epreuve {
 	private String idEpreuve;
@@ -9,7 +10,7 @@ public class Epreuve {
 	private MyDate date;
 	private ArrayList<Note> notes;
 	private int etat;
-	
+	private Scanner sc;
 	
 	static final int TYPE_DE = 1;
 	static final int TYPE_TP = 2;
@@ -29,6 +30,51 @@ public class Epreuve {
 		this.date = date;
 		this.etat = etat;
 	}
+	
+	public Epreuve(Scanner sc) {
+		this.sc = sc;
+	}
+	
+	@Override
+	public String toString() {
+		String output;
+		output = "L'épreuve: "+ idEpreuve+"\n";
+		output += "Type: ";
+		if(type == 1)
+			output += "DE";
+		else if (type==2)
+			output += "TP";
+		else if (type == 3)
+			output += "Projet";
+		output += "\n";
+		output += "Date: "+date;
+		
+		return output;
+	}
+	
+	public void createEpreuve() {
+		int jour;
+		int mois;
+		int annee;
+		
+		System.out.println("Nom de l'épreuve: ");
+		idEpreuve = sc.nextLine();
+		System.out.println("Id du cours: ");
+		idCours = sc.nextInt();
+		System.out.println("Type: 1 = DE, 2 = TP, 3 = Projet");
+		type = sc.nextInt();
+		System.out.println("Date: ");
+		System.out.println("-Jour: ");
+		jour = sc.nextInt();
+		System.out.println("-Mois: ");
+		mois = sc.nextInt();
+		System.out.println("-Annee: ");
+		annee = sc.nextInt();
+		sc.nextLine();
+		date = new MyDate(jour, mois, annee);
+		etat = 0;
+	}
+	
 	public String getIdEpreuve() {
 		return idEpreuve;
 	}

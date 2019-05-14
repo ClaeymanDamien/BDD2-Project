@@ -12,6 +12,7 @@ public class MyDate {
         mois = pMois;
         annee = Pannee;
     }
+    
 
     public void afficher_date()
     {

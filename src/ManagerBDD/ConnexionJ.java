@@ -7,7 +7,7 @@ public class ConnexionJ {
 
 	private Connection db;
 	
-	static final String DB_NAME = "test4";
+	static final String DB_NAME = "schoolDB";
 	
 	public ConnexionJ() {
 		String url;
